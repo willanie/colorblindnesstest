@@ -23,7 +23,7 @@
         .bars-container {
             display: flex;
             width: 100%;
-            height: 100%;
+            height: 80%;
         }
 
         /* Individual vertical bar stretching to fill width equally */
@@ -145,6 +145,36 @@
         .home-button:hover {
             background-color: rgba(50, 50, 50, 0.9);
         }
+
+        /* Container to place the element relative to the screen */
+        .input-container {
+            position: fixed;
+            left: 10%;
+            /* Adjust this percentage to change height from the bottom */
+            bottom: 5%; 
+            /* transform: translateX(-50%); */
+            
+            /* Layout for description above the field */
+            display: flex;
+            flex-direction: column;
+            gap: 8px; /* Space between description and input */
+            width: 300px;
+        }
+
+        .input-label {
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+            color: #ffffff;
+        }
+
+        .input-field {
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            width: 100%;
+            box-sizing: border-box;
+        }
     </style>
 </head>
 <body>
@@ -152,7 +182,7 @@
     <!-- Home Button -->
     <a href="index.html" class="home-button">🏠 Home</a>
 
-    <!-- Container holding the 4 full screen bars -->
+    <!-- Container holding the 5 full screen bars -->
     <div class="bars-container">
         
         <!-- Bar 1 -->
@@ -215,6 +245,11 @@
 
     </div>
 
+    <div class="input-container">
+        <label for="speed" class="input-label">Enter speed per frame in milliseconds current is 1000ms which = 1Hz = 1second</label>
+        <input type="number" id="speed" class="input-field" placeholder="Enter speed then hit enter...">
+    </div>
+
     <script>
         for (let i = 1; i <= 5; i++) {
             const bar = document.getElementById(`bar-${i}`);
@@ -245,6 +280,24 @@
                 updateBrightness(e.target.value);
             });
         }
+        const inputField = document.getElementById('speed');
+
+        // Listen for keypress events on the input field
+        inputField.addEventListener('keydown', function(event) {
+            // Check if the pressed key is 'Enter'
+            if (event.key === 'Enter') {
+                // Prevent default form submission behavior if applicable
+                event.preventDefault(); 
+                
+                // Get the text inside the input box
+                const enteredValue = inputField.value;
+                // 2. Save the value to sessionStorage with a custom key name
+                sessionStorage.setItem("savedspeed", enteredValue);
+
+                // Show the alert box with the value
+                alert("Speed entered: " + enteredValue);
+            }
+        });
     </script>
 </body>
 </html>
