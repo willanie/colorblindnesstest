@@ -3,33 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Animating Color Bars</title>
+    <title>Offset Vertical Bars</title>
     <style>
-        * {
-            box-sizing: border-box;
+        /* Remove default margins and hide scrollbars to perfectly fill the viewport */
+        body {
             margin: 0;
             padding: 0;
-        }
-
-        body {
-            background-color: #000000;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            height: 100vh;
             overflow: hidden;
-            display: flex;
-            flex-direction: column;
+            background-color: #111; /* Dark background to see the edge offsets clearly */
         }
-
-        /* Top Navigation Header */
-        .header {
-            display: flex;
-            align-items: center;
-            padding: 10px 20px;
-            background-color: #111111;
-            border-bottom: 1px solid #222222;
-            z-index: 10;
+        canvas {
+            display: block;
+            width: 100vw;
+            height: 100vh;
         }
-
         .home-btn {
             background-color: #333333;
             color: #ffffff;
@@ -45,234 +32,132 @@
         .home-btn:hover {
             background-color: #444444;
         }
-
-        /* Main Container holding the bars */
-        .bars-container {
-            display: flex;
-            flex: 1;
-            width: 100%;
-            height: 100%;
-            position: relative;
-        }
-
-        /* Individual Vertical Bars */
-        .bar {
-            flex: 1;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-end;
-            align-items: center;
-            padding-bottom: 40px;
-            position: relative;
-            /* Using a CSS variable for real-time JavaScript brightness control */
-            filter: brightness(var(--brightness, 1)); 
-        }
-
-        /* Assign base colors to the bars */
-        #bar-1 { background-color: #ff3b30; } /* Red */
-        #bar-2 { background-color: #34c759; } /* Green */
-        #bar-3 { background-color: #007aff; } /* Blue */
-        #bar-4 { background-color: #ffcc00; } /* Yellow */
-
-        /* Control Panel inside each bar */
-        .control-panel {
-            background-color: rgba(0, 0, 0, 0.75);
-            padding: 15px;
-            border-radius: 8px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            width: 80%;
-            max-width: 160px;
-            backdrop-filter: blur(5px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .control-group {
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-        }
-
-        .control-group label {
-            color: #aaaaaa;
-            font-size: 11px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .control-panel input[type="range"] {
-            width: 100%;
-            cursor: pointer;
-        }
-
-        .input-row {
-            display: flex;
-            gap: 5px;
-            align-items: center;
-        }
-
-        .control-panel input[type="text"] {
-            width: 60px;
-            background-color: #222222;
-            border: 1px solid #444444;
-            color: #ffffff;
-            padding: 4px;
-            border-radius: 4px;
-            font-size: 14px;
-            text-align: center;
-        }
-
-        .unit-display {
-            color: #ffffff;
-            font-size: 12px;
-        }
     </style>
 </head>
 <body>
-
     <header class="header">
         <!-- Replace href="#" with your landing page URL if needed -->
         <a href="index.html" class="home-btn">🏠 Home</a>
     </header>
 
-    <main class="bars-container">
-        <!-- Bar 1 -->
-        <div id="bar-1" class="bar">
-            <div class="control-panel">
-                <div class="control-group">
-                    <label>Speed Slider</label>
-                    <input type="range" class="slider" min="0" max="10" step="0.1" value="1">
-                </div>
-                <div class="control-group">
-                    <label>Value</label>
-                    <div class="input-row">
-                        <input type="text" class="text-input" value="1">
-                        <span class="unit-display">Hz</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Bar 2 -->
-        <div id="bar-2" class="bar">
-            <div class="control-panel">
-                <div class="control-group">
-                    <label>Speed Slider</label>
-                    <input type="range" class="slider" min="0" max="10" step="0.1" value="2">
-                </div>
-                <div class="control-group">
-                    <label>Value</label>
-                    <div class="input-row">
-                        <input type="text" class="text-input" value="2">
-                        <span class="unit-display">Hz</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Bar 3 -->
-        <div id="bar-3" class="bar">
-            <div class="control-panel">
-                <div class="control-group">
-                    <label>Speed Slider</label>
-                    <input type="range" class="slider" min="0" max="10" step="0.1" value="3">
-                </div>
-                <div class="control-group">
-                    <label>Value</label>
-                    <div class="input-row">
-                        <input type="text" class="text-input" value="3">
-                        <span class="unit-display">Hz</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Bar 4 -->
-        <div id="bar-4" class="bar">
-            <div class="control-panel">
-                <div class="control-group">
-                    <label>Speed Slider</label>
-                    <input type="range" class="slider" min="0" max="10" step="0.1" value="4">
-                </div>
-                <div class="control-group">
-                    <label>Value</label>
-                    <div class="input-row">
-                        <input type="text" class="text-input" value="4">
-                        <span class="unit-display">Hz</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </main>
+    <canvas id="barCanvas"></canvas>
 
     <script>
-        // Track state for each bar
-        const barsData = [
-            { id: 'bar-1', element: document.getElementById('bar-1'), speed: 2, time: 0 },
-            { id: 'bar-2', element: document.getElementById('bar-2'), speed: 4, time: 0 },
-            { id: 'bar-3', element: document.getElementById('bar-3'), speed: 6, time: 0 },
-            { id: 'bar-4', element: document.getElementById('bar-4'), speed: 8, time: 0 }
-        ];
+        const canvas = document.getElementById('barCanvas');
+        const ctx = canvas.getContext('2d');
 
-        // Initialize controls and setup sync listeners
-        barsData.forEach((bar, index) => {
-            const slider = bar.element.querySelector('.slider');
-            const textInput = bar.element.querySelector('.text-input');
+        const colorsF1 = [
+            "rgb(100%, 10%, 10%)",  // Red
+            "rgb(10%, 100%, 10%)",  // Green
+            "rgb(100%, 10%, 10%)",  // Red
+            "rgb(10%, 100%, 10%)"  // Green
+        ]
 
-            // Sync Slider change to Text Input and Data
-            slider.addEventListener('input', (e) => {
-                let val = parseFloat(e.target.value) || 0;
-                textInput.value = val;
-                bar.speed = val;
-            });
+        const colorsF2 = [
+            "rgb(50%, 50%, 10%)",  // Dark Yellow
+            "rgb(100%, 100%, 10%)",  // Light Yellow
+            "rgb(50%, 50%, 10%)",  // Dark Yellow
+            "rgb(100%, 100%, 10%)",  // Light Yellow
+            "rgb(50%, 50%, 10%)"  // Dark Yellow
+        ]
 
-            // Sync Text Input change to Slider and Data
-            textInput.addEventListener('input', (e) => {
-                let val = parseFloat(e.target.value);
-                if (isNaN(val)) val = 0;
-                if (val < 0) val = 0;
-                if (val > 10) val = 10; // Cap at max slider value for consistency
-                
-                slider.value = val;
-                bar.speed = val;
-            });
+        const colorsF3 = [
+            "rgb(10%, 100%, 10%)",  // Green
+            "rgb(100%, 10%, 10%)",  // Red
+            "rgb(10%, 100%, 10%)", // Green
+            "rgb(100%, 10%, 10%)"  // Red
+        ]
+
+        const colorsF4 = [
+
+            "rgb(100%, 100%, 10%)",  // Light Yellow
+            "rgb(50%, 50%, 10%)",  // Dark Yellow
+            "rgb(100%, 100%, 10%)",  // Light Yellow
+            "rgb(50%, 50%, 10%)",  // Dark Yellow
+            "rgb(100%, 100%, 10%)"  // Light Yellow
+        ]
+
+        function drawBars(colors) {
+            // Set canvas resolution to match the window size
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            //colors = colorsF3;
             
-            // Handle clearing or loose text inputs on blur
-            textInput.addEventListener('blur', (e) => {
-                if (e.target.value === '' || isNaN(parseFloat(e.target.value))) {
-                    textInput.value = slider.value;
-                    bar.speed = parseFloat(slider.value);
-                }
-            });
-        });
+            let totalBars = colors.length;
 
-        // Main Animation Loop
-        let lastTime = 0;
+            if ( totalBars > 4 ) {
+                totalBars = totalBars;
+            }
+            
+            // Calculate individual bar width so that exactly 'totalBars' fit the screen width
+            const barWidth = canvas.width / 4;
+            
+            // Calculate the starting X offset (half a bar width to the left)
+            let startX = 0;
+            if ( totalBars > 4) {
+                startX = -barWidth / 2;
+            }
 
-        function animate(currentTime) {
-            if (!lastTime) lastTime = currentTime;
-            const deltaTime = (currentTime - lastTime) / 1000; // Convert to seconds
-            lastTime = currentTime;
-
-            barsData.forEach(bar => {
-                // Advance the local internal time based on individual speed setting
-                bar.time += deltaTime * bar.speed;
-
-                // Generate a smooth oscillating sine wave between 0.2 (dim) and 1.8 (bright)
-                // Math.sin oscillates between -1 and 1
-                const brightnessFactor = 1 + Math.sin(bar.time * Math.PI * 2) * 0.8;
-
-                // Inject the inline style variable directly into the CSS filter
-                bar.element.style.setProperty('--brightness', brightnessFactor);
-            });
-
-            requestAnimationFrame(animate);
+            // Draw 6 bars so the screen stays completely filled despite the negative offset
+            for (let i = 0; i <= totalBars; i++) {
+                // Use modulo to cycle through the 5 colors for the 6th bar
+                ctx.fillStyle = colors[i % totalBars];
+                
+                // Calculate the X position for the current bar
+                const xPos = startX + (i * barWidth);
+                
+                // Draw the vertical bar spanning the full height of the canvas
+                ctx.fillRect(xPos, 0, barWidth, canvas.height);
+            }
         }
 
-        // Fire up the loop
-        requestAnimationFrame(animate);
+        // Initial draw
+        drawBars(colorsF1);
+        drawBars(colorsF2);
+
+        function frame1() {
+            drawBars(colorsF1);
+        }
+    
+        function frame2() {
+            drawBars(colorsF2);
+        }
+
+        function frame3() {
+            drawBars(colorsF3);
+        }
+
+        function frame4() {
+            drawBars(colorsF4);
+        }
+
+        // Array holding the functions to cycle through
+        const functionList = [frame1, frame2, frame4, frame4];
+    
+        // State management variables
+        let currentIndex = 0;
+        let delay = 50; // default 1 second is 1000
+        let timerId = null;
+        let isRunning = true;
+        // 2. The core loop logic using recursive setTimeout to handle dynamic speed changes
+        function runLoop() {
+            if (!isRunning) return;
+
+            // Execute the current function in the sequence
+            functionList[currentIndex]();
+
+            // Move to the next index, resetting to 0 when reaching the end
+            currentIndex = (currentIndex + 1) % functionList.length;
+
+            // Schedule the next execution with the current delay value
+            timerId = setTimeout(runLoop, delay);
+        }
+
+        // Automatically start the loop on page load
+        runLoop();
+
+        // Redraw automatically whenever the window size changes
+        window.addEventListener('resize', drawBars);
     </script>
 </body>
 </html>
