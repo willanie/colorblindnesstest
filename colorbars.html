@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Color Bars Brightness Control</title>
+    <title>Color Bars with Brightness Control</title>
     <style>
         * {
             box-sizing: border-box;
@@ -11,259 +11,219 @@
             padding: 0;
         }
 
-        body {
+        body, html {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
             background-color: #000000;
-            color: #ffffff;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            min-height: 100vh;
+        }
+
+        /* Container holding all 4 bars */
+        .bars-container {
             display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            overflow: hidden;
-        }
-
-        .header {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            width: calc(100% - 40px);
-            display: flex;
-            justify-content: flex-start;
-            z-index: 10;
-        }
-
-        .home-btn {
-            background-color: #222222;
-            color: #ffffff;
-            border: 1px solid #444444;
-            padding: 10px 20px;
-            font-size: 1rem;
-            font-weight: 600;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: background-color 0.2s, border-color 0.2s;
-            text-decoration: none;
-        }
-
-        .home-btn:hover {
-            background-color: #333333;
-            border-color: #666666;
-        }
-
-        .container {
-            display: flex;
-            gap: 40px;
             width: 100%;
-            max-width: 900px;
-            height: 70vh;
-            align-items: flex-end;
-            justify-content: center;
-            margin-top: 40px;
+            height: 100%;
         }
 
-        .column {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            height: 100%;
-            justify-content: flex-end;
+        /* Individual vertical bar stretching to fill width equally */
+        .color-bar {
             flex: 1;
-            max-width: 120px;
-        }
-
-        .bar-wrapper {
-            width: 100%;
-            height: 70%;
-            background-color: #111111;
-            border-radius: 8px;
-            display: flex;
-            align-items: flex-end;
-            overflow: hidden;
-            border: 1px solid #222222;
-        }
-
-        .bar {
-            width: 100%;
             height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            align-items: center;
+            padding-bottom: 50px;
+            position: relative;
             transition: filter 0.1s ease;
         }
 
-        /* Unique base colors for each vertical bar */
-        #bar-1 { background-color: #ff3b30; } /* Red */
-        #bar-2 { background-color: #34c759; } /* Green */
-        #bar-3 { background-color: #007aff; } /* Blue */
-        #bar-4 { background-color: #ffcc00; } /* Yellow */
+        /* Assigning base colors to each bar using HSL for easy brightness filtering */
+        #bar-1 { background-color: hsl(0, 100%, 50%); }       /* Red */
+        #bar-2 { background-color: hsl(120, 100%, 50%); }     /* Green */
+        #bar-3 { background-color: hsl(240, 100%, 50%); }     /* Blue */
+        #bar-4 { background-color: hsl(60, 100%, 50%); }      /* Yellow */
 
-        .controls {
-            width: 100%;
+        /* Control panel container inside each bar */
+        .control-panel {
+            background: rgba(0, 0, 0, 0.75);
+            padding: 20px;
+            border-radius: 12px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 12px;
-            margin-top: 20px;
+            gap: 15px;
+            width: 80%;
+            max-width: 150px;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        .slider {
+        /* Vertical slider configuration */
+        .slider-wrapper {
+            height: 150px;
+            display: flex;
+            align-items: center;
+        }
+
+        .brightness-slider {
             -webkit-appearance: none;
             appearance: none;
-            width: 100%;
-            height: 6px;
-            border-radius: 3px;
-            background: #333333;
+            width: 8px;
+            height: 150px;
+            background: #444;
             outline: none;
-            cursor: pointer;
+            border-radius: 4px;
         }
 
-        .slider::-webkit-slider-thumb {
+        .brightness-slider::-webkit-slider-thumb {
             -webkit-appearance: none;
             appearance: none;
-            width: 18px;
-            height: 18px;
+            width: 20px;
+            height: 20px;
             border-radius: 50%;
             background: #ffffff;
             cursor: pointer;
         }
 
-        .slider::-moz-range-thumb {
-            width: 18px;
-            height: 18px;
+        .brightness-slider::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
             border-radius: 50%;
             background: #ffffff;
             cursor: pointer;
             border: none;
         }
 
-        .inputs-wrapper {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            width: 100%;
-        }
-
-        .text-input {
+        /* Text Input field styling */
+        .brightness-input {
             width: 60px;
-            background-color: #111111;
-            border: 1px solid #444444;
-            color: #ffffff;
-            padding: 6px;
-            border-radius: 4px;
+            background: #222;
+            border: 1px solid #555;
+            color: #fff;
             text-align: center;
-            font-size: 0.9rem;
+            padding: 4px;
+            border-radius: 4px;
+            font-size: 14px;
         }
 
-        .text-input:focus {
-            outline: none;
-            border-color: #007aff;
+        /* Value display label */
+        .value-display {
+            color: #fff;
+            font-size: 14px;
+            font-weight: bold;
         }
 
-        .unit {
-            font-size: 0.9rem;
-            color: #888888;
+        /* Persistent Home Button */
+        .home-button {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            text-decoration: none;
+            z-index: 10;
+            transition: background-color 0.2s;
+        }
+
+        .home-button:hover {
+            background-color: rgba(50, 50, 50, 0.9);
         }
     </style>
 </head>
 <body>
 
-    <div class="header">
-        <!-- Set the href to your actual home page link if needed -->
-        <a href="#" class="home-btn" onclick="alert('Home button clicked!')">Home</a>
-    </div>
+    <!-- Home Button pointing to a fallback root directory or dashboard -->
+    <a href="/" class="home-button">🏠 Home</a>
 
-    <div class="container">
-        <!-- Bar 1: Red -->
-        <div class="column">
-            <div class="bar-wrapper">
-                <div id="bar-1" class="bar"></div>
-            </div>
-            <div class="controls">
-                <input type="range" id="slider-1" class="slider" min="0" max="100" value="100">
-                <div class="inputs-wrapper">
-                    <input type="text" id="text-1" class="text-input" value="100">
-                    <span class="unit">%</span>
+    <!-- Container holding the 4 full screen bars -->
+    <div class="bars-container">
+        
+        <!-- Bar 1 -->
+        <div id="bar-1" class="color-bar">
+            <div class="control-panel">
+                <div class="value-display" id="display-1">100%</div>
+                <div class="slider-wrapper">
+                    <input type="range" class="brightness-slider" id="slider-1" min="0" max="100" value="100">
                 </div>
+                <input type="number" class="brightness-input" id="input-1" min="0" max="100" value="100">
             </div>
         </div>
 
-        <!-- Bar 2: Green -->
-        <div class="column">
-            <div class="bar-wrapper">
-                <div id="bar-2" class="bar"></div>
-            </div>
-            <div class="controls">
-                <input type="range" id="slider-2" class="slider" min="0" max="100" value="100">
-                <div class="inputs-wrapper">
-                    <input type="text" id="text-2" class="text-input" value="100">
-                    <span class="unit">%</span>
+        <!-- Bar 2 -->
+        <div id="bar-2" class="color-bar">
+            <div class="control-panel">
+                <div class="value-display" id="display-2">100%</div>
+                <div class="slider-wrapper">
+                    <input type="range" class="brightness-slider" id="slider-2" min="0" max="100" value="100">
                 </div>
+                <input type="number" class="brightness-input" id="input-2" min="0" max="100" value="100">
             </div>
         </div>
 
-        <!-- Bar 3: Blue -->
-        <div class="column">
-            <div class="bar-wrapper">
-                <div id="bar-3" class="bar"></div>
-            </div>
-            <div class="controls">
-                <input type="range" id="slider-3" class="slider" min="0" max="100" value="100">
-                <div class="inputs-wrapper">
-                    <input type="text" id="text-3" class="text-input" value="100">
-                    <span class="unit">%</span>
+        <!-- Bar 3 -->
+        <div id="bar-3" class="color-bar">
+            <div class="control-panel">
+                <div class="value-display" id="display-3">100%</div>
+                <div class="slider-wrapper">
+                    <input type="range" class="brightness-slider" id="slider-3" min="0" max="100" value="100">
                 </div>
+                <input type="number" class="brightness-input" id="input-3" min="0" max="100" value="100">
             </div>
         </div>
 
-        <!-- Bar 4: Yellow -->
-        <div class="column">
-            <div class="bar-wrapper">
-                <div id="bar-4" class="bar"></div>
-            </div>
-            <div class="controls">
-                <input type="range" id="slider-4" class="slider" min="0" max="100" value="100">
-                <div class="inputs-wrapper">
-                    <input type="text" id="text-4" class="text-input" value="100">
-                    <span class="unit">%</span>
+        <!-- Bar 4 -->
+        <div id="bar-4" class="color-bar">
+            <div class="control-panel">
+                <div class="value-display" id="display-4">100%</div>
+                <div class="slider-wrapper">
+                    <input type="range" class="brightness-slider" id="slider-4" min="0" max="100" value="100">
                 </div>
+                <input type="number" class="brightness-input" id="input-4" min="0" max="100" value="100">
             </div>
         </div>
+
     </div>
 
     <script>
-        // Setup synchronization for all 4 control sets
+        // Set up interactions for each of the 4 columns
         for (let i = 1; i <= 4; i++) {
             const bar = document.getElementById(`bar-${i}`);
             const slider = document.getElementById(`slider-${i}`);
-            const textInput = document.getElementById(`text-${i}`);
+            const input = document.getElementById(`input-${i}`);
+            const display = document.getElementById(`display-${i}`);
 
+            // Main update function to sync brightness changes
             function updateBrightness(value) {
-                // Ensure value stays between 0 and 100
-                let cleanValue = Math.min(Math.max(parseInt(value) || 0, 0), 100);
-                
-                // Apply brightness via CSS filter
-                bar.style.filter = `brightness(${cleanValue}%)`;
-                
-                // Sync values across UI components
-                slider.value = cleanValue;
-                if (document.activeElement !== textInput) {
-                    textInput.value = cleanValue;
-                }
+                // Ensure value stays within 0-100 boundaries
+                if (value < 0) value = 0;
+                if (value > 100) value = 100;
+                if (value === "") value = 0;
+
+                // Sync the UI controls
+                slider.value = value;
+                input.value = value;
+                display.textContent = value + "%";
+
+                // Adjust the individual bar brightness using CSS brightness filter
+                bar.style.filter = `brightness(${value}%)`;
             }
 
-            // Listen for slider changes
+            // Sync text input modifications to slider and color bar
+            input.addEventListener('input', (e) => {
+                updateBrightness(e.target.value);
+            });
+
+            // Sync slider track adjustment to text input and color bar
             slider.addEventListener('input', (e) => {
                 updateBrightness(e.target.value);
-            });
-
-            // Listen for typing input
-            textInput.addEventListener('input', (e) => {
-                updateBrightness(e.target.value);
-            });
-
-            // Validate and clean up input when user clicks away
-            textInput.addEventListener('blur', (e) => {
-                let cleanValue = Math.min(Math.max(parseInt(e.target.value) || 0, 0), 100);
-                textInput.value = cleanValue;
             });
         }
     </script>
