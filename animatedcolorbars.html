@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Animating Color Bars</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: #000000;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Top Navigation Header */
+        .header {
+            display: flex;
+            align-items: center;
+            padding: 10px 20px;
+            background-color: #111111;
+            border-bottom: 1px solid #222222;
+            z-index: 10;
+        }
+
+        .home-btn {
+            background-color: #333333;
+            color: #ffffff;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            text-decoration: none;
+            transition: background-color 0.2s;
+        }
+
+        .home-btn:hover {
+            background-color: #444444;
+        }
+
+        /* Main Container holding the bars */
+        .bars-container {
+            display: flex;
+            flex: 1;
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+
+        /* Individual Vertical Bars */
+        .bar {
+            flex: 1;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            align-items: center;
+            padding-bottom: 40px;
+            position: relative;
+            /* Using a CSS variable for real-time JavaScript brightness control */
+            filter: brightness(var(--brightness, 1)); 
+        }
+
+        /* Assign base colors to the bars */
+        #bar-1 { background-color: #ff3b30; } /* Red */
+        #bar-2 { background-color: #34c759; } /* Green */
+        #bar-3 { background-color: #007aff; } /* Blue */
+        #bar-4 { background-color: #ffcc00; } /* Yellow */
+
+        /* Control Panel inside each bar */
+        .control-panel {
+            background-color: rgba(0, 0, 0, 0.75);
+            padding: 15px;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            width: 80%;
+            max-width: 160px;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .control-group label {
+            color: #aaaaaa;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .control-panel input[type="range"] {
+            width: 100%;
+            cursor: pointer;
+        }
+
+        .input-row {
+            display: flex;
+            gap: 5px;
+            align-items: center;
+        }
+
+        .control-panel input[type="text"] {
+            width: 60px;
+            background-color: #222222;
+            border: 1px solid #444444;
+            color: #ffffff;
+            padding: 4px;
+            border-radius: 4px;
+            font-size: 14px;
+            text-align: center;
+        }
+
+        .unit-display {
+            color: #ffffff;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+
+    <header class="header">
+        <!-- Replace href="#" with your landing page URL if needed -->
+        <a href="index.html" class="home-btn">🏠 Home</a>
+    </header>
+
+    <main class="bars-container">
+        <!-- Bar 1 -->
+        <div id="bar-1" class="bar">
+            <div class="control-panel">
+                <div class="control-group">
+                    <label>Speed Slider</label>
+                    <input type="range" class="slider" min="0" max="10" step="0.1" value="2">
+                </div>
+                <div class="control-group">
+                    <label>Value</label>
+                    <div class="input-row">
+                        <input type="text" class="text-input" value="2">
+                        <span class="unit-display">Hz</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bar 2 -->
+        <div id="bar-2" class="bar">
+            <div class="control-panel">
+                <div class="control-group">
+                    <label>Speed Slider</label>
+                    <input type="range" class="slider" min="0" max="10" step="0.1" value="4">
+                </div>
+                <div class="control-group">
+                    <label>Value</label>
+                    <div class="input-row">
+                        <input type="text" class="text-input" value="4">
+                        <span class="unit-display">Hz</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bar 3 -->
+        <div id="bar-3" class="bar">
+            <div class="control-panel">
+                <div class="control-group">
+                    <label>Speed Slider</label>
+                    <input type="range" class="slider" min="0" max="10" step="0.1" value="6">
+                </div>
+                <div class="control-group">
+                    <label>Value</label>
+                    <div class="input-row">
+                        <input type="text" class="text-input" value="6">
+                        <span class="unit-display">Hz</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bar 4 -->
+        <div id="bar-4" class="bar">
+            <div class="control-panel">
+                <div class="control-group">
+                    <label>Speed Slider</label>
+                    <input type="range" class="slider" min="0" max="10" step="0.1" value="8">
+                </div>
+                <div class="control-group">
+                    <label>Value</label>
+                    <div class="input-row">
+                        <input type="text" class="text-input" value="8">
+                        <span class="unit-display">Hz</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Track state for each bar
+        const barsData = [
+            { id: 'bar-1', element: document.getElementById('bar-1'), speed: 2, time: 0 },
+            { id: 'bar-2', element: document.getElementById('bar-2'), speed: 4, time: 0 },
+            { id: 'bar-3', element: document.getElementById('bar-3'), speed: 6, time: 0 },
+            { id: 'bar-4', element: document.getElementById('bar-4'), speed: 8, time: 0 }
+        ];
+
+        // Initialize controls and setup sync listeners
+        barsData.forEach((bar, index) => {
+            const slider = bar.element.querySelector('.slider');
+            const textInput = bar.element.querySelector('.text-input');
+
+            // Sync Slider change to Text Input and Data
+            slider.addEventListener('input', (e) => {
+                let val = parseFloat(e.target.value) || 0;
+                textInput.value = val;
+                bar.speed = val;
+            });
+
+            // Sync Text Input change to Slider and Data
+            textInput.addEventListener('input', (e) => {
+                let val = parseFloat(e.target.value);
+                if (isNaN(val)) val = 0;
+                if (val < 0) val = 0;
+                if (val > 10) val = 10; // Cap at max slider value for consistency
+                
+                slider.value = val;
+                bar.speed = val;
+            });
+            
+            // Handle clearing or loose text inputs on blur
+            textInput.addEventListener('blur', (e) => {
+                if (e.target.value === '' || isNaN(parseFloat(e.target.value))) {
+                    textInput.value = slider.value;
+                    bar.speed = parseFloat(slider.value);
+                }
+            });
+        });
+
+        // Main Animation Loop
+        let lastTime = 0;
+
+        function animate(currentTime) {
+            if (!lastTime) lastTime = currentTime;
+            const deltaTime = (currentTime - lastTime) / 1000; // Convert to seconds
+            lastTime = currentTime;
+
+            barsData.forEach(bar => {
+                // Advance the local internal time based on individual speed setting
+                bar.time += deltaTime * bar.speed;
+
+                // Generate a smooth oscillating sine wave between 0.2 (dim) and 1.8 (bright)
+                // Math.sin oscillates between -1 and 1
+                const brightnessFactor = 1 + Math.sin(bar.time * Math.PI * 2) * 0.8;
+
+                // Inject the inline style variable directly into the CSS filter
+                bar.element.style.setProperty('--brightness', brightnessFactor);
+            });
+
+            requestAnimationFrame(animate);
+        }
+
+        // Fire up the loop
+        requestAnimationFrame(animate);
+    </script>
+</body>
+</html>
