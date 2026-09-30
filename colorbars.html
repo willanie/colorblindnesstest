@@ -3,115 +3,199 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vertical Bars with Brightness Control</title>
+    <title>Color Bars with Brightness Control</title>
     <style>
-        /* Base page layout with a solid black background */
-        body {
+        /* Reset and set black background */
+        * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
+        }
+        
+        body {
             background-color: #000000;
-            color: #ffffff;
-            font-family: Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             height: 100vh;
             display: flex;
             flex-direction: column;
             overflow: hidden;
         }
 
-        /* Container for the 4 vertical color bars */
-        .bars-container {
-            display: flex;
+        /* Top navigation bar for the home button */
+        .nav-bar {
+            height: 60px;
             width: 100%;
-            height: 85vh; /* Takes up most of the screen */
-        }
-
-        /* Shared styles for each vertical bar */
-        .bar {
-            flex: 1;
-            height: 100%;
-            transition: filter 0.1s ease; /* Smooth transition when adjusting brightness */
-            /* Initial brightness value controlled by CSS Variable */
-            filter: brightness(var(--brightness-level, 1)); 
-        }
-
-        /* 4 Different Colors */
-        .bar-1 { background-color: #ff3333; } /* Vibrant Red */
-        .bar-2 { background-color: #33cc33; } /* Vibrant Green */
-        .bar-3 { background-color: #3333ff; } /* Vibrant Blue */
-        .bar-4 { background-color: #ffff33; } /* Vibrant Yellow */
-
-        /* Control panel area at the bottom */
-        .controls {
-            height: 15vh;
             display: flex;
-            flex-direction: column;
-            justify-content: center;
             align-items: center;
+            padding: 0 20px;
             background-color: #111111;
-            border-top: 1px solid #222222;
+            border-bottom: 1px solid #222222;
             z-index: 10;
         }
 
-        .slider-group {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        label {
-            font-size: 1rem;
-            letter-spacing: 0.5px;
-        }
-
-        input[type="range"] {
-            width: 250px;
+        .home-btn {
+            background-color: #333333;
+            color: #ffffff;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 5px;
             cursor: pointer;
+            transition: background-color 0.2s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .home-btn:hover {
+            background-color: #444444;
+        }
+
+        /* Container for the 4 vertical bars */
+        .bars-container {
+            flex: 1;
+            display: flex;
+            width: 100%;
+            height: calc(100vh - 60px);
+        }
+
+        /* Individual vertical bar */
+        .color-bar {
+            flex: 1;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            align-items: center;
+            padding-bottom: 40px;
+            position: relative;
+            transition: filter 0.1s ease;
+        }
+
+        /* Assigning 4 distinct base colors */
+        #bar-1 { background-color: #ff3b30; } /* Red */
+        #bar-2 { background-color: #34c759; } /* Green */
+        #bar-3 { background-color: #007aff; } /* Blue */
+        #bar-4 { background-color: #ffcc00; } /* Yellow */
+
+        /* Container for the control slider overlay */
+        .control-panel {
+            background-color: rgba(0, 0, 0, 0.6);
+            padding: 15px;
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            backdrop-filter: blur(5px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+            width: 80%;
+            max-width: 120px;
+        }
+
+        .bar-label {
+            color: #ffffff;
+            font-size: 14px;
+            font-weight: 600;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+        }
+
+        /* Vertical slider styling */
+        .brightness-slider {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 8px;
+            height: 150px;
+            background: #555555;
+            outline: none;
+            border-radius: 4px;
+            writing-mode: bt-lr; /* Deployment safety for older systems */
+            transform: rotate(-180deg); /* Flips slider so up increases value */
+        }
+
+        /* Slider Thumb customizing */
+        .brightness-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #ffffff;
+            cursor: pointer;
+            box-shadow: 0 0 6px rgba(0,0,0,0.5);
+        }
+
+        .brightness-slider::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #ffffff;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 0 6px rgba(0,0,0,0.5);
         }
     </style>
 </head>
 <body>
 
-    <!-- Vertical Bars -->
-    <div class="bars-container" id="barsContainer">
-        <div class="bar bar-1"></div>
-        <div class="bar bar-2"></div>
-        <div class="bar bar-3"></div>
-        <div class="bar bar-4"></div>
-    </div>
+    <!-- Navigation Header with Home Button -->
+    <header class="nav-bar">
+        <!-- Change the href target to your preferred landing page URL -->
+        <a href="/" class="home-btn">
+            🏠 Home
+        </a>
+    </header>
 
-    <!-- Brightness Controller -->
-    <div class="controls">
-        <div class="slider-group">
-            <label for="brightnessSlider">Brightness:</label>
-            <input 
-                type="range" 
-                id="brightnessSlider" 
-                min="0" 
-                max="100" 
-                value="100"
-            >
-            <span id="brightnessValue">100%</span>
+    <!-- Main Container for the 4 Vertical Bars -->
+    <main class="bars-container">
+        
+        <!-- Bar 1: Red -->
+        <div id="bar-1" class="color-bar">
+            <div class="control-panel">
+                <span class="bar-label">Red</span>
+                <input type="range" class="brightness-slider" min="0" max="100" value="100" data-bar="bar-1">
+            </div>
         </div>
-    </div>
 
-    <!-- JavaScript for Dynamic Control -->
+        <!-- Bar 2: Green -->
+        <div id="bar-2" class="color-bar">
+            <div class="control-panel">
+                <span class="bar-label">Green</span>
+                <input type="range" class="brightness-slider" min="0" max="100" value="100" data-bar="bar-2">
+            </div>
+        </div>
+
+        <!-- Bar 3: Blue -->
+        <div id="bar-3" class="color-bar">
+            <div class="control-panel">
+                <span class="bar-label">Blue</span>
+                <input type="range" class="brightness-slider" min="0" max="100" value="100" data-bar="bar-3">
+            </div>
+        </div>
+
+        <!-- Bar 4: Yellow -->
+        <div id="bar-4" class="color-bar">
+            <div class="control-panel">
+                <span class="bar-label">Yellow</span>
+                <input type="range" class="brightness-slider" min="0" max="100" value="100" data-bar="bar-4">
+            </div>
+        </div>
+
+    </main>
+
+    <!-- JavaScript to control individual column brightness -->
     <script>
-        const slider = document.getElementById('brightnessSlider');
-        const valueDisplay = document.getElementById('brightnessValue');
-        const barsContainer = document.getElementById('barsContainer');
-
-        // Listen for input adjustments on the slider
-        slider.addEventListener('input', (event) => {
-            const value = event.target.value;
-            
-            // Display the current percentage text
-            valueDisplay.textContent = `${value}%`;
-            
-            // Convert 0-100 scale into a 0-1 decimal value for the CSS filter
-            const decimalBrightness = value / 100;
-            
-            // Apply the brightness property to the container styling variable
-            barsContainer.style.setProperty('--brightness-level', decimalBrightness);
+        document.querySelectorAll('.brightness-slider').forEach(slider => {
+            slider.addEventListener('input', (event) => {
+                const targetBarId = event.target.getAttribute('data-bar');
+                const targetBar = document.getElementById(targetBarId);
+                const brightnessValue = event.target.value;
+                
+                // Uses the CSS brightness filter to control the element's illumination
+                targetBar.style.filter = `brightness(${brightnessValue}%)`;
+            });
         });
     </script>
 </body>
