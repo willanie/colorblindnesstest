@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Color Bars with Brightness Control</title>
+    <title>Color Bars with Permanent Blackout</title>
     <style>
         * {
             box-sizing: border-box;
@@ -36,14 +36,19 @@
             align-items: center;
             padding-bottom: 50px;
             position: relative;
-            transition: filter 0.1s ease;
+            transition: filter 0.1s ease, background-color 0.1s ease;
         }
 
-        /* Assigning base colors to each bar using HSL for easy brightness filtering */
+        /* Base colors assigned to each bar */
         #bar-1 { background-color: hsl(0, 100%, 50%); }       /* Red */
         #bar-2 { background-color: hsl(120, 100%, 50%); }     /* Green */
         #bar-3 { background-color: hsl(240, 100%, 50%); }     /* Blue */
         #bar-4 { background-color: hsl(60, 100%, 50%); }      /* Yellow */
+
+        /* Force black class applied permanently on touch */
+        .color-bar.blackout {
+            background-color: #000000 !important;
+        }
 
         /* Control panel container inside each bar */
         .control-panel {
@@ -140,7 +145,7 @@
 </head>
 <body>
 
-    <!-- Home Button pointing to a fallback root directory or dashboard -->
+    <!-- Home Button -->
     <a href="/" class="home-button">🏠 Home</a>
 
     <!-- Container holding the 4 full screen bars -->
@@ -193,38 +198,36 @@
     </div>
 
     <script>
-        // Set up interactions for each of the 4 columns
         for (let i = 1; i <= 4; i++) {
             const bar = document.getElementById(`bar-${i}`);
             const slider = document.getElementById(`slider-${i}`);
             const input = document.getElementById(`input-${i}`);
             const display = document.getElementById(`display-${i}`);
 
-            // Main update function to sync brightness changes
             function updateBrightness(value) {
-                // Ensure value stays within 0-100 boundaries
                 if (value < 0) value = 0;
                 if (value > 100) value = 100;
                 if (value === "") value = 0;
 
-                // Sync the UI controls
                 slider.value = value;
                 input.value = value;
                 display.textContent = value + "%";
 
-                // Adjust the individual bar brightness using CSS brightness filter
                 bar.style.filter = `brightness(${value}%)`;
             }
 
-            // Sync text input modifications to slider and color bar
             input.addEventListener('input', (e) => {
                 updateBrightness(e.target.value);
             });
 
-            // Sync slider track adjustment to text input and color bar
             slider.addEventListener('input', (e) => {
                 updateBrightness(e.target.value);
             });
+
+            // --- PERMANENT BLACKOUT LOGIC ---
+            // Trigger blackout on first touch/click interaction and do not remove it
+            slider.addEventListener('mousedown', () => bar.classList.add('blackout'));
+            slider.addEventListener('touchstart', () => bar.classList.add('blackout'));
         }
     </script>
 </body>
