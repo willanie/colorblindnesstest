@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Color Bars with Permanent Blackout</title>
+    <title>Color Bars with Brightness Control</title>
     <style>
         * {
             box-sizing: border-box;
@@ -36,7 +36,7 @@
             align-items: center;
             padding-bottom: 50px;
             position: relative;
-            transition: filter 0.1s ease, background-color 0.1s ease;
+            transition: filter 0.1s ease;
         }
 
         /* Base colors assigned to each bar */
@@ -44,11 +44,6 @@
         #bar-2 { background-color: hsl(120, 100%, 50%); }     /* Green */
         #bar-3 { background-color: hsl(240, 100%, 50%); }     /* Blue */
         #bar-4 { background-color: hsl(60, 100%, 50%); }      /* Yellow */
-
-        /* Force black class applied permanently on touch */
-        .color-bar.blackout {
-            background-color: #000000 !important;
-        }
 
         /* Control panel container inside each bar */
         .control-panel {
@@ -213,6 +208,7 @@
                 input.value = value;
                 display.textContent = value + "%";
 
+                // Adjust brightness normally via CSS filter
                 bar.style.filter = `brightness(${value}%)`;
             }
 
@@ -223,11 +219,6 @@
             slider.addEventListener('input', (e) => {
                 updateBrightness(e.target.value);
             });
-
-            // --- PERMANENT BLACKOUT LOGIC ---
-            // Trigger blackout on first touch/click interaction and do not remove it
-            slider.addEventListener('mousedown', () => bar.classList.add('blackout'));
-            slider.addEventListener('touchstart', () => bar.classList.add('blackout'));
         }
     </script>
 </body>
