@@ -3,214 +3,269 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Color Bars with Brightness Control</title>
+    <title>Color Bars Brightness Control</title>
     <style>
-        /* Reset and set black background */
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
         }
-        
+
         body {
             background-color: #000000;
+            color: #ffffff;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            height: 100vh;
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
             overflow: hidden;
         }
 
-        /* Top navigation bar for the home button */
-        .nav-bar {
-            height: 60px;
-            width: 100%;
+        .header {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            width: calc(100% - 40px);
             display: flex;
-            align-items: center;
-            padding: 0 20px;
-            background-color: #111111;
-            border-bottom: 1px solid #222222;
+            justify-content: flex-start;
             z-index: 10;
         }
 
         .home-btn {
-            background-color: #333333;
+            background-color: #222222;
             color: #ffffff;
-            border: none;
+            border: 1px solid #444444;
             padding: 10px 20px;
-            font-size: 16px;
-            font-weight: bold;
-            border-radius: 5px;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 6px;
             cursor: pointer;
-            transition: background-color 0.2s ease;
+            transition: background-color 0.2s, border-color 0.2s;
             text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
         }
 
         .home-btn:hover {
-            background-color: #444444;
+            background-color: #333333;
+            border-color: #666666;
         }
 
-        /* Container for the 4 vertical bars */
-        .bars-container {
-            flex: 1;
+        .container {
             display: flex;
+            gap: 40px;
             width: 100%;
-            height: calc(100vh - 60px);
+            max-width: 900px;
+            height: 70vh;
+            align-items: flex-end;
+            justify-content: center;
+            margin-top: 40px;
         }
 
-        /* Individual vertical bar wrapper */
-        .bar-wrapper {
-            flex: 1;
-            height: 100%;
+        .column {
             display: flex;
             flex-direction: column;
+            align-items: center;
+            height: 100%;
             justify-content: flex-end;
-            align-items: center;
-            padding-bottom: 40px;
-            position: relative;
+            flex: 1;
+            max-width: 120px;
         }
 
-        /* The actual colored bar that gets dimmed */
-        .color-layer {
-            position: absolute;
-            top: 0;
-            left: 0;
+        .bar-wrapper {
+            width: 100%;
+            height: 70%;
+            background-color: #111111;
+            border-radius: 8px;
+            display: flex;
+            align-items: flex-end;
+            overflow: hidden;
+            border: 1px solid #222222;
+        }
+
+        .bar {
             width: 100%;
             height: 100%;
-            z-index: 1;
-            transition: filter 0.05s linear;
+            transition: filter 0.1s ease;
         }
 
-        /* Assigning 4 distinct base colors */
-        #color-1 { background-color: #ff3b30; } /* Red */
-        #color-2 { background-color: #34c759; } /* Green */
-        #color-3 { background-color: #007aff; } /* Blue */
-        #color-4 { background-color: #ffcc00; } /* Yellow */
+        /* Unique base colors for each vertical bar */
+        #bar-1 { background-color: #ff3b30; } /* Red */
+        #bar-2 { background-color: #34c759; } /* Green */
+        #bar-3 { background-color: #007aff; } /* Blue */
+        #bar-4 { background-color: #ffcc00; } /* Yellow */
 
-        /* Control panel overlay sitting on top of the color */
-        .control-panel {
-            position: relative;
-            z-index: 2;
-            background-color: rgba(0, 0, 0, 0.75);
-            padding: 15px;
-            border-radius: 12px;
+        .controls {
+            width: 100%;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 10px;
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-            box-shadow: 0 4px 20px rgba(0,0,0,0.8);
-            width: 85%;
-            max-width: 160px;
+            gap: 12px;
+            margin-top: 20px;
         }
 
-        .bar-label {
-            color: #ffffff;
-            font-size: 14px;
-            font-weight: 600;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
-        }
-
-        /* Horizontal slider styling for perfect stability */
-        .brightness-slider {
+        .slider {
             -webkit-appearance: none;
             appearance: none;
             width: 100%;
             height: 6px;
-            background: #444444;
-            outline: none;
             border-radius: 3px;
+            background: #333333;
+            outline: none;
             cursor: pointer;
         }
 
-        /* Slider Thumb customizing */
-        .brightness-slider::-webkit-slider-thumb {
+        .slider::-webkit-slider-thumb {
             -webkit-appearance: none;
             appearance: none;
             width: 18px;
             height: 18px;
             border-radius: 50%;
             background: #ffffff;
-            box-shadow: 0 0 6px rgba(0,0,0,0.5);
+            cursor: pointer;
         }
 
-        .brightness-slider::-moz-range-thumb {
+        .slider::-moz-range-thumb {
             width: 18px;
             height: 18px;
             border-radius: 50%;
             background: #ffffff;
+            cursor: pointer;
             border: none;
-            box-shadow: 0 0 6px rgba(0,0,0,0.5);
+        }
+
+        .inputs-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            width: 100%;
+        }
+
+        .text-input {
+            width: 60px;
+            background-color: #111111;
+            border: 1px solid #444444;
+            color: #ffffff;
+            padding: 6px;
+            border-radius: 4px;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+
+        .text-input:focus {
+            outline: none;
+            border-color: #007aff;
+        }
+
+        .unit {
+            font-size: 0.9rem;
+            color: #888888;
         }
     </style>
 </head>
 <body>
 
-    <!-- Navigation Header with Home Button -->
-    <header class="nav-bar">
-        <a href="index.html" class="home-btn">
-            🏠 Home
-        </a>
-    </header>
+    <div class="header">
+        <!-- Set the href to your actual home page link if needed -->
+        <a href="#" class="home-btn" onclick="alert('Home button clicked!')">Home</a>
+    </div>
 
-    <!-- Main Container for the 4 Vertical Bars -->
-    <main class="bars-container">
-        
+    <div class="container">
         <!-- Bar 1: Red -->
-        <div class="bar-wrapper">
-            <div id="color-1" class="color-layer"></div>
-            <div class="control-panel">
-                <span class="bar-label">Red</span>
-                <input type="range" class="brightness-slider" min="0" max="100" value="100" data-target="color-1">
+        <div class="column">
+            <div class="bar-wrapper">
+                <div id="bar-1" class="bar"></div>
+            </div>
+            <div class="controls">
+                <input type="range" id="slider-1" class="slider" min="0" max="100" value="100">
+                <div class="inputs-wrapper">
+                    <input type="text" id="text-1" class="text-input" value="100">
+                    <span class="unit">%</span>
+                </div>
             </div>
         </div>
 
         <!-- Bar 2: Green -->
-        <div class="bar-wrapper">
-            <div id="color-2" class="color-layer"></div>
-            <div class="control-panel">
-                <span class="bar-label">Green</span>
-                <input type="range" class="brightness-slider" min="0" max="100" value="100" data-target="color-2">
+        <div class="column">
+            <div class="bar-wrapper">
+                <div id="bar-2" class="bar"></div>
+            </div>
+            <div class="controls">
+                <input type="range" id="slider-2" class="slider" min="0" max="100" value="100">
+                <div class="inputs-wrapper">
+                    <input type="text" id="text-2" class="text-input" value="100">
+                    <span class="unit">%</span>
+                </div>
             </div>
         </div>
 
         <!-- Bar 3: Blue -->
-        <div class="bar-wrapper">
-            <div id="color-3" class="color-layer"></div>
-            <div class="control-panel">
-                <span class="bar-label">Blue</span>
-                <input type="range" class="brightness-slider" min="0" max="100" value="100" data-target="color-3">
+        <div class="column">
+            <div class="bar-wrapper">
+                <div id="bar-3" class="bar"></div>
+            </div>
+            <div class="controls">
+                <input type="range" id="slider-3" class="slider" min="0" max="100" value="100">
+                <div class="inputs-wrapper">
+                    <input type="text" id="text-3" class="text-input" value="100">
+                    <span class="unit">%</span>
+                </div>
             </div>
         </div>
 
         <!-- Bar 4: Yellow -->
-        <div class="bar-wrapper">
-            <div id="color-4" class="color-layer"></div>
-            <div class="control-panel">
-                <span class="bar-label">Yellow</span>
-                <input type="range" class="brightness-slider" min="0" max="100" value="100" data-target="color-4">
+        <div class="column">
+            <div class="bar-wrapper">
+                <div id="bar-4" class="bar"></div>
+            </div>
+            <div class="controls">
+                <input type="range" id="slider-4" class="slider" min="0" max="100" value="100">
+                <div class="inputs-wrapper">
+                    <input type="text" id="text-4" class="text-input" value="100">
+                    <span class="unit">%</span>
+                </div>
             </div>
         </div>
+    </div>
 
-    </main>
-
-    <!-- JavaScript to handle brightness smoothly -->
     <script>
-        document.querySelectorAll('.brightness-slider').forEach(slider => {
-            // "input" handles real-time dragging on desktops and mobile touch screens
-            slider.addEventListener('input', (event) => {
-                const targetId = event.target.getAttribute('data-target');
-                const targetLayer = document.getElementById(targetId);
-                const value = event.target.value;
+        // Setup synchronization for all 4 control sets
+        for (let i = 1; i <= 4; i++) {
+            const bar = document.getElementById(`bar-${i}`);
+            const slider = document.getElementById(`slider-${i}`);
+            const textInput = document.getElementById(`text-${i}`);
+
+            function updateBrightness(value) {
+                // Ensure value stays between 0 and 100
+                let cleanValue = Math.min(Math.max(parseInt(value) || 0, 0), 100);
                 
-                // Directly applies the slider value (0 to 100) as a percentage
-                targetLayer.style.filter = `brightness(${value}%)`;
+                // Apply brightness via CSS filter
+                bar.style.filter = `brightness(${cleanValue}%)`;
+                
+                // Sync values across UI components
+                slider.value = cleanValue;
+                if (document.activeElement !== textInput) {
+                    textInput.value = cleanValue;
+                }
+            }
+
+            // Listen for slider changes
+            slider.addEventListener('input', (e) => {
+                updateBrightness(e.target.value);
             });
-        });
+
+            // Listen for typing input
+            textInput.addEventListener('input', (e) => {
+                updateBrightness(e.target.value);
+            });
+
+            // Validate and clean up input when user clicks away
+            textInput.addEventListener('blur', (e) => {
+                let cleanValue = Math.min(Math.max(parseInt(e.target.value) || 0, 0), 100);
+                textInput.value = cleanValue;
+            });
+        }
     </script>
 </body>
 </html>
