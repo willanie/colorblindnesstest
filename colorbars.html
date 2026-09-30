@@ -3,145 +3,116 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Color Bars with Brightness Control</title>
+    <title>Vertical Bars with Brightness Control</title>
     <style>
-        /* Black background for the entire page */
+        /* Base page layout with a solid black background */
         body {
+            margin: 0;
+            padding: 0;
             background-color: #000000;
             color: #ffffff;
             font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 20px;
+            height: 100vh;
             display: flex;
             flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
-            box-sizing: border-box;
+            overflow: hidden;
         }
 
-        h1 {
-            margin-bottom: 30px;
-        }
-
-        .container {
+        /* Container for the 4 vertical color bars */
+        .bars-container {
+            display: flex;
             width: 100%;
-            max-width: 800px;
-            display: flex;
-            flex-direction: column;
-            gap: 25px;
+            height: 85vh; /* Takes up most of the screen */
         }
 
-        /* Styling for each color bar row */
-        .bar-row {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
+        /* Shared styles for each vertical bar */
+        .bar {
+            flex: 1;
+            height: 100%;
+            transition: filter 0.1s ease; /* Smooth transition when adjusting brightness */
+            /* Initial brightness value controlled by CSS Variable */
+            filter: brightness(var(--brightness-level, 1)); 
         }
 
-        .bar-label {
-            font-size: 14px;
-            font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
+        /* 4 Different Colors */
+        .bar-1 { background-color: #ff3333; } /* Vibrant Red */
+        .bar-2 { background-color: #33cc33; } /* Vibrant Green */
+        .bar-3 { background-color: #3333ff; } /* Vibrant Blue */
+        .bar-4 { background-color: #ffff33; } /* Vibrant Yellow */
 
-        /* The actual colored horizontal bar */
-        .color-bar {
-            height: 40px;
-            width: 100%;
-            border-radius: 4px;
-            transition: filter 0.1s ease;
-        }
-
-        /* Individual base colors using HSL */
-        #bar-1 { background-color: hsl(0, 100%, 50%); }   /* Red */
-        #bar-2 { background-color: hsl(120, 100%, 50%); } /* Green */
-        #bar-3 { background-color: hsl(240, 100%, 50%); } /* Blue */
-        #bar-4 { background-color: hsl(60, 100%, 50%); }  /* Yellow */
-
-        /* Styling for the brightness slider */
+        /* Control panel area at the bottom */
         .controls {
+            height: 15vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-color: #111111;
+            border-top: 1px solid #222222;
+            z-index: 10;
+        }
+
+        .slider-group {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 15px;
         }
 
-        .slider {
-            flex-grow: 1;
+        label {
+            font-size: 1rem;
+            letter-spacing: 0.5px;
+        }
+
+        input[type="range"] {
+            width: 250px;
             cursor: pointer;
-        }
-
-        .percentage {
-            width: 45px;
-            text-align: right;
-            font-family: monospace;
         }
     </style>
 </head>
 <body>
 
-    <h1>Color Bars</h1>
+    <!-- Vertical Bars -->
+    <div class="bars-container" id="barsContainer">
+        <div class="bar bar-1"></div>
+        <div class="bar bar-2"></div>
+        <div class="bar bar-3"></div>
+        <div class="bar bar-4"></div>
+    </div>
 
-    <div class="container">
-        <!-- Bar 1: Red -->
-        <div class="bar-row">
-            <div class="bar-label">Red Bar</div>
-            <div id="bar-1" class="color-bar"></div>
-            <div class="controls">
-                <label for="brightness-1">Brightness:</label>
-                <input type="range" id="brightness-1" class="slider" min="0" max="100" value="100" oninput="updateBrightness(1, this.value)">
-                <span id="val-1" class="percentage">100%</span>
-            </div>
-        </div>
-
-        <!-- Bar 2: Green -->
-        <div class="bar-row">
-            <div class="bar-label">Green Bar</div>
-            <div id="bar-2" class="color-bar"></div>
-            <div class="controls">
-                <label for="brightness-2">Brightness:</label>
-                <input type="range" id="brightness-2" class="slider" min="0" max="100" value="100" oninput="updateBrightness(2, this.value)">
-                <span id="val-2" class="percentage">100%</span>
-            </div>
-        </div>
-
-        <!-- Bar 3: Blue -->
-        <div class="bar-row">
-            <div class="bar-label">Blue Bar</div>
-            <div id="bar-3" class="color-bar"></div>
-            <div class="controls">
-                <label for="brightness-3">Brightness:</label>
-                <input type="range" id="brightness-3" class="slider" min="0" max="100" value="100" oninput="updateBrightness(3, this.value)">
-                <span id="val-3" class="percentage">100%</span>
-            </div>
-        </div>
-
-        <!-- Bar 4: Yellow -->
-        <div class="bar-row">
-            <div class="bar-label">Yellow Bar</div>
-            <div id="bar-4" class="color-bar"></div>
-            <div class="controls">
-                <label for="brightness-4">Brightness:</label>
-                <input type="range" id="brightness-4" class="slider" min="0" max="100" value="100" oninput="updateBrightness(4, this.value)">
-                <span id="val-4" class="percentage">100%</span>
-            </div>
+    <!-- Brightness Controller -->
+    <div class="controls">
+        <div class="slider-group">
+            <label for="brightnessSlider">Brightness:</label>
+            <input 
+                type="range" 
+                id="brightnessSlider" 
+                min="0" 
+                max="100" 
+                value="100"
+            >
+            <span id="brightnessValue">100%</span>
         </div>
     </div>
 
+    <!-- JavaScript for Dynamic Control -->
     <script>
-        // JavaScript function to dynamically change the brightness filter of each bar
-        function updateBrightness(barId, value) {
-            // Target the specific color bar and percentage text
-            const bar = document.getElementById(`bar-${barId}`);
-            const text = document.getElementById(`val-${barId}`);
-            
-            // Apply CSS brightness filter (0% is black, 100% is full color)
-            bar.style.filter = `brightness(${value}%)`;
-            
-            // Update the text label next to the slider
-            text.textContent = `${value}%`;
-        }
-    </script>
+        const slider = document.getElementById('brightnessSlider');
+        const valueDisplay = document.getElementById('brightnessValue');
+        const barsContainer = document.getElementById('barsContainer');
 
+        // Listen for input adjustments on the slider
+        slider.addEventListener('input', (event) => {
+            const value = event.target.value;
+            
+            // Display the current percentage text
+            valueDisplay.textContent = `${value}%`;
+            
+            // Convert 0-100 scale into a 0-1 decimal value for the CSS filter
+            const decimalBrightness = value / 100;
+            
+            // Apply the brightness property to the container styling variable
+            barsContainer.style.setProperty('--brightness-level', decimalBrightness);
+        });
+    </script>
 </body>
 </html>
