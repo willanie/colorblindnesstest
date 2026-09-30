@@ -61,8 +61,8 @@
             height: calc(100vh - 60px);
         }
 
-        /* Individual vertical bar */
-        .color-bar {
+        /* Individual vertical bar wrapper */
+        .bar-wrapper {
             flex: 1;
             height: 100%;
             display: flex;
@@ -71,28 +71,41 @@
             align-items: center;
             padding-bottom: 40px;
             position: relative;
-            transition: filter 0.1s ease;
+        }
+
+        /* The actual colored bar that gets dimmed */
+        .color-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            transition: filter 0.05s linear;
         }
 
         /* Assigning 4 distinct base colors */
-        #bar-1 { background-color: #ff3b30; } /* Red */
-        #bar-2 { background-color: #34c759; } /* Green */
-        #bar-3 { background-color: #007aff; } /* Blue */
-        #bar-4 { background-color: #ffcc00; } /* Yellow */
+        #color-1 { background-color: #ff3b30; } /* Red */
+        #color-2 { background-color: #34c759; } /* Green */
+        #color-3 { background-color: #007aff; } /* Blue */
+        #color-4 { background-color: #ffcc00; } /* Yellow */
 
-        /* Container for the control slider overlay */
+        /* Control panel overlay sitting on top of the color */
         .control-panel {
-            background-color: rgba(0, 0, 0, 0.6);
+            position: relative;
+            z-index: 2;
+            background-color: rgba(0, 0, 0, 0.75);
             padding: 15px;
             border-radius: 12px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 8px;
-            backdrop-filter: blur(5px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
-            width: 80%;
-            max-width: 120px;
+            gap: 10px;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.8);
+            width: 85%;
+            max-width: 160px;
         }
 
         .bar-label {
@@ -102,37 +115,34 @@
             text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
         }
 
-        /* Vertical slider styling */
+        /* Horizontal slider styling for perfect stability */
         .brightness-slider {
             -webkit-appearance: none;
             appearance: none;
-            width: 8px;
-            height: 150px;
-            background: #555555;
+            width: 100%;
+            height: 6px;
+            background: #444444;
             outline: none;
-            border-radius: 4px;
-            writing-mode: bt-lr; /* Deployment safety for older systems */
-            transform: rotate(-180deg); /* Flips slider so up increases value */
+            border-radius: 3px;
+            cursor: pointer;
         }
 
         /* Slider Thumb customizing */
         .brightness-slider::-webkit-slider-thumb {
             -webkit-appearance: none;
             appearance: none;
-            width: 20px;
-            height: 20px;
+            width: 18px;
+            height: 18px;
             border-radius: 50%;
             background: #ffffff;
-            cursor: pointer;
             box-shadow: 0 0 6px rgba(0,0,0,0.5);
         }
 
         .brightness-slider::-moz-range-thumb {
-            width: 20px;
-            height: 20px;
+            width: 18px;
+            height: 18px;
             border-radius: 50%;
             background: #ffffff;
-            cursor: pointer;
             border: none;
             box-shadow: 0 0 6px rgba(0,0,0,0.5);
         }
@@ -142,7 +152,6 @@
 
     <!-- Navigation Header with Home Button -->
     <header class="nav-bar">
-        <!-- Change the href target to your preferred landing page URL -->
         <a href="/" class="home-btn">
             🏠 Home
         </a>
@@ -152,49 +161,54 @@
     <main class="bars-container">
         
         <!-- Bar 1: Red -->
-        <div id="bar-1" class="color-bar">
+        <div class="bar-wrapper">
+            <div id="color-1" class="color-layer"></div>
             <div class="control-panel">
                 <span class="bar-label">Red</span>
-                <input type="range" class="brightness-slider" min="0" max="100" value="100" data-bar="bar-1">
+                <input type="range" class="brightness-slider" min="0" max="100" value="100" data-target="color-1">
             </div>
         </div>
 
         <!-- Bar 2: Green -->
-        <div id="bar-2" class="color-bar">
+        <div class="bar-wrapper">
+            <div id="color-2" class="color-layer"></div>
             <div class="control-panel">
                 <span class="bar-label">Green</span>
-                <input type="range" class="brightness-slider" min="0" max="100" value="100" data-bar="bar-2">
+                <input type="range" class="brightness-slider" min="0" max="100" value="100" data-target="color-2">
             </div>
         </div>
 
         <!-- Bar 3: Blue -->
-        <div id="bar-3" class="color-bar">
+        <div class="bar-wrapper">
+            <div id="color-3" class="color-layer"></div>
             <div class="control-panel">
                 <span class="bar-label">Blue</span>
-                <input type="range" class="brightness-slider" min="0" max="100" value="100" data-bar="bar-3">
+                <input type="range" class="brightness-slider" min="0" max="100" value="100" data-target="color-3">
             </div>
         </div>
 
         <!-- Bar 4: Yellow -->
-        <div id="bar-4" class="color-bar">
+        <div class="bar-wrapper">
+            <div id="color-4" class="color-layer"></div>
             <div class="control-panel">
                 <span class="bar-label">Yellow</span>
-                <input type="range" class="brightness-slider" min="0" max="100" value="100" data-bar="bar-4">
+                <input type="range" class="brightness-slider" min="0" max="100" value="100" data-target="color-4">
             </div>
         </div>
 
     </main>
 
-    <!-- JavaScript to control individual column brightness -->
+    <!-- JavaScript to handle brightness smoothly -->
     <script>
         document.querySelectorAll('.brightness-slider').forEach(slider => {
+            // "input" handles real-time dragging on desktops and mobile touch screens
             slider.addEventListener('input', (event) => {
-                const targetBarId = event.target.getAttribute('data-bar');
-                const targetBar = document.getElementById(targetBarId);
-                const brightnessValue = event.target.value;
+                const targetId = event.target.getAttribute('data-target');
+                const targetLayer = document.getElementById(targetId);
+                const value = event.target.value;
                 
-                // Uses the CSS brightness filter to control the element's illumination
-                targetBar.style.filter = `brightness(${brightnessValue}%)`;
+                // Directly applies the slider value (0 to 100) as a percentage
+                targetLayer.style.filter = `brightness(${value}%)`;
             });
         });
     </script>
