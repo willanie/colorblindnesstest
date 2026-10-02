@@ -40,9 +40,9 @@
         }
 
         /* Base colors assigned to each bar */
-        #bar-1 { background-color: rgb(100%, 10%, 10%); }       /* Red */
-        #bar-2 { background-color: rgb(10%, 100%, 10%); }     /* Green */
-        #bar-3 { background-color: rgb(10%, 10%, 100%); }     /* Blue */
+        #bar-1 { background-color: rgb(75%, 10%, 10%); }       /* Red */
+        #bar-2 { background-color: rgb(10%, 75%, 10%); }     /* Green */
+        #bar-3 { background-color: rgb(10%, 10%, 100%); }    /* Blue */
         #bar-4 { background-color: rgb(100%, 100%, 10%); }      /* Yellow */
         #bar-5 { background-color: rgb(100%, 100%, 10%); }      /* Dark Yellow */
 
@@ -188,26 +188,26 @@
         <!-- Bar 1 -->
         <div id="bar-1" class="color-bar">
             <div class="control-panel">
-                <div class="value-display" id="display-1">100%</div>
+                <div class="value-display" id="display-1">75%</div>
                 <div class="slider-wrapper">
-                    <input type="range" class="brightness-slider" id="slider-1" min="0" max="100" value="100">
+                    <input type="range" class="brightness-slider" id="slider-1" min="0" max="100" value="75">
                 </div>
-                <input type="number" class="brightness-input" id="input-1" min="0" max="100" value="100">
+                <input type="number" class="brightness-input" id="input-1" min="0" max="100" value="75">
             </div>
         </div>
 
         <!-- Bar 2 -->
         <div id="bar-2" class="color-bar">
             <div class="control-panel">
-                <div class="value-display" id="display-2">100%</div>
+                <div class="value-display" id="display-2">75%</div>
                 <div class="slider-wrapper">
-                    <input type="range" class="brightness-slider" id="slider-2" min="0" max="100" value="100">
+                    <input type="range" class="brightness-slider" id="slider-2" min="0" max="100" value="75">
                 </div>
-                <input type="number" class="brightness-input" id="input-2" min="0" max="100" value="100">
+                <input type="number" class="brightness-input" id="input-2" min="0" max="100" value="75">
             </div>
         </div>
 
-        <!-- Bar 3 -->
+        <!-- Bar 3
         <div id="bar-3" class="color-bar">
             <div class="control-panel">
                 <div class="value-display" id="display-3">100%</div>
@@ -217,6 +217,7 @@
                 <input type="number" class="brightness-input" id="input-3" min="0" max="100" value="100">
             </div>
         </div>
+        -->
 
         <!-- Bar 4 -->
         <div id="bar-4" class="color-bar">
@@ -252,6 +253,7 @@
 
     <script>
         for (let i = 1; i <= 5; i++) {
+            if ( i == 3) { continue}
             const bar = document.getElementById(`bar-${i}`);
             const slider = document.getElementById(`slider-${i}`);
             const input = document.getElementById(`input-${i}`);
