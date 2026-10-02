@@ -57,7 +57,7 @@
         <label for="quantity" class="input-label">Enter Delay and hit enter:</label>
         
         <!-- Number Input Field -->
-        <input type="number" id="quantity" name="quantity" class="number-input" min="1" max="1000" value="1000">
+        <input type="number" id="quantity" name="quantity" class="number-input" min="1" max="1000" value="42">
     </header>
 
     <canvas id="barCanvas"></canvas>
@@ -65,36 +65,52 @@
     <script>
         const canvas = document.getElementById('barCanvas');
         const ctx = canvas.getContext('2d');
+        let desatPercent = "10%";
+        let redPercent = "75%";
+        let greenPercent = "75%";
+        let brightYellowPercent = "75%";
+        let darkYellowPercent = "50%";
+
+        //const RedRGB = "rgb(${redPercent}, ${desatPercent}, ${desatPercent})";
+        //const GreenRGB = "`rgb(${desatPercent}, ${greenPercent}, ${desatPercent})`";
+        //const BrightYellowRGB = "`rgb(${brightYellowPercent}, ${brightYellowPercent}, ${desatPercent})`";
+        //const DarkYellowRGB = "`rgb(${darkYellowPercent}, ${darkYellowPercent}, ${desatPercent})`";
+
+        let RedRGB = "rgb( " + redPercent + " , " + desatPercent + " , " + desatPercent + " ) ";
+        let GreenRGB = "rgb( " + desatPercent + " , " + greenPercent + " , " + desatPercent + " ) ";
+        let BrightYellowRGB = "rgb( " + brightYellowPercent + " , " + brightYellowPercent + " , " + desatPercent + " ) ";
+        let DarkYellowRGB = "rgb( " + darkYellowPercent + " , " + darkYellowPercent + " , " + desatPercent + " ) ";
+
 
         const colorsF1 = [
-            "rgb(100%, 10%, 10%)",  // Red
-            "rgb(10%, 100%, 10%)",  // Green
-            "rgb(100%, 10%, 10%)",  // Red
-            "rgb(10%, 100%, 10%)"  // Green
+            RedRGB,  // Red
+            GreenRGB,  // Green
+            RedRGB,  // Red
+            GreenRGB  // Green
         ]
 
         const colorsF2 = [
-            "rgb(50%, 50%, 10%)",  // Dark Yellow
-            "rgb(100%, 100%, 10%)",  // Light Yellow
-            "rgb(50%, 50%, 10%)",  // Dark Yellow
-            "rgb(100%, 100%, 10%)",  // Light Yellow
-            "rgb(50%, 50%, 10%)"  // Dark Yellow
+            DarkYellowRGB,  // Dark Yellow
+            BrightYellowRGB,  // Light Yellow
+            DarkYellowRGB,  // Dark Yellow
+            BrightYellowRGB,  // Light Yellow
+            DarkYellowRGB  // Dark Yellow
         ]
 
         const colorsF3 = [
-            "rgb(10%, 100%, 10%)",  // Green
-            "rgb(100%, 10%, 10%)",  // Red
-            "rgb(10%, 100%, 10%)", // Green
-            "rgb(100%, 10%, 10%)"  // Red
+            GreenRGB,  // Green
+            RedRGB,  // Red
+            GreenRGB, // Green
+            RedRGB  // Red
         ]
 
         const colorsF4 = [
 
-            "rgb(100%, 100%, 10%)",  // Light Yellow
-            "rgb(50%, 50%, 10%)",  // Dark Yellow
-            "rgb(100%, 100%, 10%)",  // Light Yellow
-            "rgb(50%, 50%, 10%)",  // Dark Yellow
-            "rgb(100%, 100%, 10%)"  // Light Yellow
+            BrightYellowRGB,  // Light Yellow
+            DarkYellowRGB,  // Dark Yellow
+            BrightYellowRGB,  // Light Yellow
+            DarkYellowRGB,  // Dark Yellow
+            BrightYellowRGB  // Light Yellow
         ]
 
         function drawBars(colors) {
@@ -156,7 +172,7 @@
     
         // State management variables
         let currentIndex = 0;
-        let delay = 1000; // default 1 second is 1000 ms
+        let delay = 42; // default 24fps 1 second is 1000 ms
  
         // 1. Retrieve the value from sessionStorage using the exact key name
         const saveddelay = sessionStorage.getItem("savedspeed");
@@ -165,7 +181,7 @@
         if (saveddelay) {
             delay = saveddelay ;
         } else {
-            delay = 1000;
+            delay = 42;
         }
         
         let timerId = null;
