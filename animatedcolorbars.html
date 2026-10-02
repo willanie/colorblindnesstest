@@ -24,7 +24,7 @@
             padding: 8px 16px;
             border-radius: 4px;
             cursor: pointer;
-            font-size: 14px;
+            font-size: 3vh;
             text-decoration: none;
             transition: background-color 0.2s;
         }
@@ -32,12 +32,32 @@
         .home-btn:hover {
             background-color: #444444;
         }
+
+        .input-label {
+            color: #ffffff;
+            font-weight: bold;
+            font-size: 3vh;
+            margin-left: 1vw;
+        }
+
+        .number-input {
+            padding: 6px;
+            font-size: 3vh;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            width: 80px;
+        }
     </style>
 </head>
 <body>
     <header class="header">
         <!-- Replace href="#" with your landing page URL if needed -->
         <a href="index.html" class="home-btn">🏠 Home</a>
+        <!-- Label to the right of the home button -->
+        <label for="quantity" class="input-label">Enter Delay and hit enter:</label>
+        
+        <!-- Number Input Field -->
+        <input type="number" id="quantity" name="quantity" class="number-input" min="1" max="1000" value="1000">
     </header>
 
     <canvas id="barCanvas"></canvas>
@@ -137,6 +157,17 @@
         // State management variables
         let currentIndex = 0;
         let delay = 1000; // default 1 second is 1000 ms
+ 
+        // 1. Retrieve the value from sessionStorage using the exact key name
+        const saveddelay = sessionStorage.getItem("savedspeed");
+
+        // 2. Use the retrieved data on your page (or fallback if empty)
+        if (saveddelay) {
+            delay = saveddelay ;
+        } else {
+            delay = 1000;
+        }
+        
         let timerId = null;
         let isRunning = true;
         // 2. The core loop logic using recursive setTimeout to handle dynamic speed changes
@@ -152,6 +183,24 @@
             // Schedule the next execution with the current delay value
             timerId = setTimeout(runLoop, delay);
         }
+        // Select the input field by its ID
+        const inputField = document.getElementById('quantity');
+
+        // Listen for keypress events on the input field
+        inputField.addEventListener('keydown', function(event) {
+            // Check if the pressed key is 'Enter'
+            if (event.key === 'Enter') {
+                // Prevent default form submission behavior if applicable
+                event.preventDefault(); 
+                
+                // Get the text inside the input box
+                const enteredValue = inputField.value;
+                
+                // Show the alert box with the value
+                alert("Delay entered: " + enteredValue);
+                delay = enteredValue;
+            }
+        });
 
         // Automatically start the loop on page load
         runLoop();
