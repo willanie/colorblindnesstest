@@ -40,7 +40,7 @@
         .input-label {
             color: #ffffff;
             font-weight: bold;
-            font-size: 2vw;
+            font-size: 1vw;
             margin-left: 1vw;
         }
 
@@ -59,24 +59,41 @@
         <a href="index.html" class="home-btn">🏠 Home</a>
 
         <!-- Label to the right of the home button -->
-        <label for="repeatCount" class="input-label">Enter repeat Count and hit enter:</label>
-        
+        <label for="repeatCount" class="input-label">Enter repeat Count:</label>
         <!-- Number Input Field -->
         <input type="number" id="repeatCount" name="repeatCount" class="number-input" min="1" max="1000" value="1">
 
         <!-- Label to the right of the input repeat -->
-        <label for="Speed" class="input-label">Enter speed and hit enter:</label>
-        
+        <label for="Speed" class="input-label">Enter speed:</label>
         <!-- Number Input Field -->
-        <input type="number" id="Speed" name="Speed" class="number-input" min="1" max="1000" value="42">
+        <input type="number" id="Speed" name="Speed" class="number-input" min="1" max="1000" value="1000">
+
+        <label for="RnGIntensity" class="input-label">Enter R&G Intensity:</label>
+        <!-- Number Input Field -->
+        <input type="number" id="RnGIntensity" name="RnGIntensity" class="number-input" min="1" max="100" value="75">
+
+        <label for="bYIntensity" class="input-label">Enter bright Y:</label>
+        <!-- Number Input Field -->
+        <input type="number" id="bYIntensity" name="bYIntensity" class="number-input" min="1" max="100" value="75">
+
+        <label for="dYIntensity" class="input-label">Enter dark Y:</label>
+        <!-- Number Input Field -->
+        <input type="number" id="dYIntensity" name="dYIntensity" class="number-input" min="1" max="100" value="50">
     </header>
 
     <canvas id="mainCanvas"></canvas>
 
+    <!--
     <canvas id="frame1"></canvas>
     <canvas id="frame2"></canvas>
     <canvas id="frame3"></canvas>
     <canvas id="frame4"></canvas>
+
+    <canvas id="Tempframe1"></canvas>
+    <canvas id="Tempframe2"></canvas>
+    <canvas id="Tempframe3"></canvas>
+    <canvas id="Tempframe4"></canvas>
+    -->
 
     <script>
         const mainCanvas = document.getElementById('mainCanvas');
@@ -92,6 +109,63 @@
         // Define the native size of your original graphic
         sourceCanvas.width = screen.width;
         sourceCanvas.height = screen.height;
+
+        let frameList = ["frame1", "frame2", "frame3", "frame4"];
+        let frameListTemp = ["Tempframe1", "Tempframe2", "Tempframe3", "Tempframe4"];
+
+        function createTempOffScreenCanvases() {
+            for (i = 0; i < frameListTemp.length; i++){
+                let name = frameListTemp[i];
+                let framesCanvas = document.createElement("canvas");
+                framesCanvas.id = name;
+                console.log("inside TempcreateOffScreenCanvases name: " + name + " id:" + framesCanvas.id);
+                //let framesCtx = framesCanvas.getContext('2d');
+                // Define the native size of your original graphic
+                framesCanvas.width = screen.width;
+                framesCanvas.height = screen.height;
+                document.body.appendChild(framesCanvas);
+                let tempcanvasOffscreen = document.getElementById(name);
+                if (tempcanvasOffscreen) { console.log("    temp canvas id is good " + name); }
+            }
+        }
+        
+        function createOffScreenCanvases() {
+            for (i = 0; i < frameList.length; i++){
+                let newname = frameList[i];
+                let newframesCanvas = document.createElement("canvas");
+                newframesCanvas.id = newname;
+                console.log("inside createOffScreenCanvases name: " + newname + " id:" + newframesCanvas.id);
+                newframesCanvas.width = screen.width;
+                newframesCanvas.height = screen.height;
+                document.body.appendChild(newframesCanvas);
+                let newcreatedcanvasOffscreen = document.getElementById(newname);
+                if (newcreatedcanvasOffscreen) { console.log("    canvas id is good " + newname); }
+            }
+        }
+
+
+        console.log("\njust before call to createOffScreenCanvases");
+        createOffScreenCanvases();
+        console.log("just after call to createOffScreenCanvases");
+
+        console.log("\n testing canavases")
+        let newnameit = frameList[0];
+        console.log(" nameit frameList[0]: " + newnameit);
+        let newtestit = document.getElementById(newnameit);
+        console.log(" testit id:" + newtestit.id);
+        let framesCtx = newtestit.getContext('2d');
+    
+        console.log("\njust before call to createTempOffScreenCanvases");
+        createTempOffScreenCanvases();
+        console.log("just after call to createTempOffScreenCanvases");
+
+        console.log("\n testing Temp canavases")
+        let Tempnameit = frameListTemp[0];
+        console.log(" nameit framelistTemp[0]: " + Tempnameit);
+        let Temptestit = document.getElementById(Tempnameit);
+        console.log(" testit id:" + Temptestit.id);
+        let TempframesCtx = Temptestit.getContext('2d');
+
 
         // 3. Draw your original artwork into the offscreen canvas
         function drawSourcePattern() {
@@ -139,6 +213,35 @@
                 );
             }
         }
+        // 4. Render and scale onto the main full-screen canvas
+        function renderOnce(offscreencanvas) {
+            // Set main canvas to match the screen window size
+            mainCanvas.width = window.innerWidth;
+            mainCanvas.height = window.innerHeight;
+            let canvasOffscreen = document.getElementById(offscreencanvas);
+            let ctxOffscreen = canvasOffscreen.getContext('2d');
+
+            // Calculate how wide each scaled canvas needs to be to fill the screen
+            let scaledWidth = mainCanvas.width;
+            
+            
+            // Keep the height identical to your source design (unscaled)
+            // Or change this to mainCanvas.height if you want it to fill the screen vertically too
+            let scaledHeight = canvasOffscreen.height; 
+
+            // Clear the main screen
+            //ctx.clearRect(0, 0, mainCanvas.width, mainCanvas.height);
+            //ctx.imageSmoothingEnabled = false; // Forces a cache state refresh
+            let xPosition = 0;
+            console.log(" inside renderonce" + " canvas id: " + canvasOffscreen.id + " xpos: " + xPosition + " width: " + canvasOffscreen.width + " scaledwidth: ", scaledWidth + " source width: " + canvasOffscreen.width);
+            ctx.drawImage(
+                    canvasOffscreen, 
+                    0, 0, canvasOffscreen.width, canvasOffscreen.height, // Source dimensions
+                    xPosition, 0, scaledWidth, scaledHeight        // Destination dimensions (Width scaled, height native)
+                );
+            //ctx.fillStyle = "rgb(150,20,50)";
+            //ctx.fillRect(0, 0, 100, 200);
+        }
 
         // bars from here
         let desatPercent = "10%";
@@ -150,12 +253,16 @@
         let colorsF2 = [];
         let colorsF3 = [];
         let colorsF4 = [];
+        let RedRGB = " ";
+        let GreenRGB = " ";
+        let BrightYellowRGB = " ";
+        let DarkYellowRGB = " ";
         
         function creatergbArrays() {
-          let RedRGB = "rgb( " + redPercent + " , " + desatPercent + " , " + desatPercent + " ) ";
-          let GreenRGB = "rgb( " + desatPercent + " , " + greenPercent + " , " + desatPercent + " ) ";
-          let BrightYellowRGB = "rgb( " + brightYellowPercent + " , " + brightYellowPercent + " , " + desatPercent + " ) ";
-          let DarkYellowRGB = "rgb( " + darkYellowPercent + " , " + darkYellowPercent + " , " + desatPercent + " ) ";
+          RedRGB = "rgb( " + redPercent + " , " + desatPercent + " , " + desatPercent + " ) ";
+          GreenRGB = "rgb( " + desatPercent + " , " + greenPercent + " , " + desatPercent + " ) ";
+          BrightYellowRGB = "rgb( " + brightYellowPercent + " , " + brightYellowPercent + " , " + desatPercent + " ) ";
+          DarkYellowRGB = "rgb( " + darkYellowPercent + " , " + darkYellowPercent + " , " + desatPercent + " ) ";
 
           colorsF1 = [
             RedRGB,  // Red
@@ -189,13 +296,16 @@
         }
         function drawBars(offscreencanvas,colors) {
             // Set canvas resolution to match the window size
+            console.log("inside drawBars: " + offscreencanvas);
             const canvasOffscreen = document.getElementById(offscreencanvas);
             const ctxOffscreen = canvasOffscreen.getContext('2d');
             canvasOffscreen.width = screen.width;
             canvasOffscreen.height = screen.height;
+            
             //colors = colorsF3;
             
             let totalBars = colors.length;
+            console.log("inside drawBars offscreen canvas:" + canvasOffscreen.id + " width:" + canvasOffscreen.width);
             //console.log(" bars offscreenwidth: " + canvasOffscreen.width + " offscreen canvas: " + offscreencanvas + " totalbars: " + totalBars);
 
             if ( totalBars > 4 ) {
@@ -218,33 +328,89 @@
                 
                 // Calculate the X position for the current bar
                 const xPos = startX + (i * barWidth);
-                
+                console.log( "     xPos: " + xPos + " barwidth: " + barWidth + " fill color:" + colors[i % totalBars])
                 // Draw the vertical bar spanning the full height of the canvas
                 ctxOffscreen.fillRect(xPos, 0, barWidth, canvasOffscreen.height);
             }
         }
 
         // Initialize
-        creatergbArrays();
-        drawBars("frame1",colorsF1);
-        drawBars("frame2",colorsF2);
-        drawBars("frame3",colorsF3);
-        drawBars("frame4",colorsF4);
+        function refreshBars() {
+          creatergbArrays();
+          drawBars("frame1",colorsF1);
+          console.log("inside refreshBars colorsF1:" + colorsF1);
+          drawBars("frame2",colorsF2);
+          console.log("inside refreshBars colorsF2:" + colorsF2);
+          drawBars("frame3",colorsF3);
+          console.log("inside refreshBars colorsF3:" + colorsF3);
+          drawBars("frame4",colorsF4);
+          console.log("inside refreshBars colorsF4:" + colorsF4);
+          console.log("inside refreshBars Red percent:" + RedRGB + " Green percent:" + GreenRGB + "bright yellow percent:" + BrightYellowRGB + " dark yellow percent:" + DarkYellowRGB );
+        }
+        createOffScreenCanvases();
+        refreshBars();
+        //drawBars("mainCanvas",colorsF2);mainCanvas
+        
 
-        let frameList = ["frame1", "frame2", "frame3", "frame4"];
+
+
+        function generateRepeatedBarsFrames(repeatcount){
+            for (i=0; i < frameListTemp.length; i++) {
+                const canvasIn = document.getElementById(frameList[i]);
+                const ctxIn = canvasIn.getContext('2d');
+                const canvasOut = document.getElementById(frameListTemp[i]);
+                const ctxOut = canvasOut.getContext('2d');
+                canvasOut.width = screen.width;
+                canvasOut.height = screen.height;
+
+                // Calculate how wide each scaled canvas needs to be to fill the screen
+                const scaledWidth = canvasIn.width / repeatcount;
+                console.log(" inside generateRepeatedBarsFrames repeat count: " + repeatcount + " width: " + canvasOut.width + " scaledwidth: ", scaledWidth + " source width: " + sourceCanvas.width);
+            
+                // Keep the height identical to your source design (unscaled)
+                // Or change this to mainCanvas.height if you want it to fill the screen vertically too
+                const scaledHeight = canvasIn.height; 
+
+                // Clear the screen
+                ctxOut.clearRect(0, 0, canvasOut.width, canvasOut.height);
+                console.log("     canvasIn:" + frameList[i] +" canvasOut:" + frameListTemp[i] + " repeat count: " + repeatcount);
+                // Loop and draw the source canvas across the width
+                for (copy = 0; copy < repeatcount; copy++) {
+                    const xPosition = copy * scaledWidth;
+                    console.log("     xposition: " + xPosition);
+                    ctxOut.drawImage(
+                        canvasIn, 
+                        0, 0, canvasIn.width, canvasIn.height, // Source dimensions
+                        xPosition, 0, scaledWidth, scaledHeight        // Destination dimensions (Width scaled, height native)
+                    );
+                }
+
+            }
+        }
+
         let numberofframes = frameList.length;
         let currentIndex = 0;
-        let delay = 420; // default 24fps 1 second is 1000 ms
+        let delay = 1000; // default 24fps=42 1 second=1000 ms
         let timerId = null;
         let isRunning = true;
-        function runloop() {
-            //alert("number of frames: " + numberofframes);
 
-              let thisframe = document.getElementById(frameList[currentIndex]);
+        function runloop() {
+              let thisframeName = frameList[currentIndex];
+              if ( REPEAT_COUNT > 1) {
+                thisframeName = frameListTemp[currentIndex];
+              }
+              let thisframe = document.getElementById(thisframeName);
+
               let thisframeCtx = thisframe.getContext('2d');
-              //console.log("frame: " + frameList[currentIndex] + " thisframe: " + thisframe );
-              sourceCtx.drawImage(thisframe,0,0);
-              render();
+              if ( currentIndex == 0) { 
+                console.log(" ");
+              }
+              console.log("inside runloop frame: " + frameList[currentIndex] + " thisframe: " + thisframe.id + " thiswidth: " + thisframe.width + "  ctxwidth:" + mainCanvas.width);
+              //ctx.drawImage(thisframe,0,0, thisframe.width, thisframe.height,0,0,mainCanvas.width, mainCanvas.height);
+              //ctx.fillStyle = "rgb(150,20,50)";
+              //ctx.fillRect(0, 0, 100, 200);
+              renderOnce(thisframeName);
+              //renderOnce("frame1");
               // Move to the next index, resetting to 0 when reaching the end
               currentIndex = (currentIndex + 1) % numberofframes;
 
@@ -253,10 +419,11 @@
               timerId = setTimeout(runloop, delay);
         }
 
-        drawSourcePattern();
-        let thisoffscreencanvas = document.getElementById("frame3");
-        sourceCtx.drawImage(thisoffscreencanvas,0,0);
-        render();
+        //drawSourcePattern();
+        generateRepeatedBarsFrames(REPEAT_COUNT);
+        //let thisoffscreencanvas = document.getElementById("frame3");
+        //ctx.drawImage(thisoffscreencanvas,0,0);
+        //render();
 
         // Select the input field by its ID
         let inputField = document.getElementById('repeatCount');
@@ -276,9 +443,13 @@
                 }
                 
                 // Show the alert box with the value
-                alert("Delay entered: " + enteredValue);
                 REPEAT_COUNT = enteredValue;
-                render();
+                currentIndex = 0;
+                refreshBars();
+                generateRepeatedBarsFrames(REPEAT_COUNT);
+                alert("Repeat count entered: " + enteredValue + " frame speed: " + delay);
+                timerId = setTimeout(runloop, delay);
+                runloop();
             }
         });        
 
@@ -300,14 +471,127 @@
                 }
                 
                 // Show the alert box with the value
-                alert("Delay entered: " + enteredValue + "repeat count: " + REPEAT_COUNT);
                 delay = enteredValue;
+                currentIndex = 0;
+                refreshBars();
+                generateRepeatedBarsFrames(REPEAT_COUNT);
+                alert( " repeat count: " + REPEAT_COUNT + " frame speed: " + delay);
+                timerId = setTimeout(runloop, delay);
                 runloop();
             }
-        });  
-        drawSourcePattern();
-        render();
+        });
+
+        // Select the input field by its ID
+        let inputField3 = document.getElementById('RnGIntensity');
+
+        // Listen for keypress events on the input field
+        inputField3.addEventListener('keydown', function(event) {
+            // Check if the pressed key is 'Enter'
+            if (event.key === 'Enter') {
+                // Prevent default form submission behavior if applicable
+                event.preventDefault(); 
+                
+                // Get the text inside the input box
+                let enteredValue = inputField3.value;
+                if (enteredValue < 1) {
+                  inputField2.value = 1;
+                  enteredValue = 1;
+                }
+                
+                // Show the alert box with the value
+                desatPercent = "10%";
+                redPercent = enteredValue + "%";
+                greenPercent = enteredValue + "%";
+                //brightYellowPercent = "75%";
+                //darkYellowPercent = "50%";
+                currentIndex = 0;
+                refreshBars();
+                generateRepeatedBarsFrames(REPEAT_COUNT);
+                alert("R and G entered: " + redPercent + " repeat count: " + REPEAT_COUNT + " frame speed: " + delay);
+                timerId = setTimeout(runloop, delay);
+                runloop();
+            }
+        });
+
+        // Select the input field by its ID
+        let inputField4 = document.getElementById('bYIntensity');
+
+        // Listen for keypress events on the input field
+        inputField4.addEventListener('keydown', function(event) {
+            // Check if the pressed key is 'Enter'
+            if (event.key === 'Enter') {
+                // Prevent default form submission behavior if applicable
+                event.preventDefault(); 
+                
+                // Get the text inside the input box
+                let enteredValue = inputField4.value;
+                if (enteredValue < 1) {
+                  inputField2.value = 1;
+                  enteredValue = 1;
+                }
+                
+                // Show the alert box with the value
+                desatPercent = "10%";
+                //redPercent = enteredValue + "%";
+                //greenPercent = enteredValue + "%";
+                brightYellowPercent = enteredValue + "%";
+                //darkYellowPercent = "50%";
+                currentIndex = 0;
+                refreshBars();
+                generateRepeatedBarsFrames(REPEAT_COUNT);
+                alert("bright Yellow entered: " + brightYellowPercent + " repeat count: " + REPEAT_COUNT + " frame speed: "+ delay);
+                timerId = setTimeout(runloop, delay);
+                runloop();
+            }
+        });
+
+        // Select the input field by its ID
+        let inputField5 = document.getElementById('dYIntensity');
+
+        // Listen for keypress events on the input field
+        inputField5.addEventListener('keydown', function(event) {
+            // Check if the pressed key is 'Enter'
+            if (event.key === 'Enter') {
+                // Prevent default form submission behavior if applicable
+                event.preventDefault(); 
+                
+                // Get the text inside the input box
+                let enteredValue = inputField5.value;
+                if (enteredValue < 1) {
+                  inputField2.value = 1;
+                  enteredValue = 1;
+                }
+                
+                // Show the alert box with the value
+                desatPercent = "10%";
+                //redPercent = enteredValue + "%";
+                //greenPercent = enteredValue + "%";
+                darkYellowPercent = enteredValue + "%";
+                //darkYellowPercent = "50%";
+                currentIndex = 0;
+                refreshBars();
+                generateRepeatedBarsFrames(REPEAT_COUNT);
+                alert("dark Yellow entered: " + darkYellowPercent + " repeat count: " + REPEAT_COUNT + " frame speed: "+ delay);
+                timerId = setTimeout(runloop, delay);
+                runloop();
+            }
+        });
+
+        //drawBars("mainCanvas",colorsF2);
+        //drawSourcePattern();
+        //generateRepeatedBarsFrames(REPEAT_COUNT);
+        refreshBars();
+        generateRepeatedBarsFrames(REPEAT_COUNT);
+        //renderOnce("Tempframe1");
+        runloop();
         // Handle window resizing
+        //let thiscanvas = document.getElementById("frame1");
+        //ctx.drawImage(
+        //            thiscanvas, 
+        //            0, 0, thiscanvas.width, thiscanvas.height, // Source dimensions
+        //            0, 0, mainCanvas.width, mainCanvas.height       // Destination dimensions (Width scaled, height native)
+        //        );
+        
         window.addEventListener('resize', render);
     </script>
 </body>
