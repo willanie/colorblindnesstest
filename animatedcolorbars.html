@@ -49,6 +49,13 @@
             font-size: 2vw;
             border: 1px solid #ccc;
             border-radius: 4px;
+            width: 5vw;
+        }
+        .number-input-wide {
+            padding: 6px;
+            font-size: 2vw;
+            border: 1px solid #ccc;
+            border-radius: 4px;
             width: 7vw;
         }
     </style>
@@ -66,11 +73,15 @@
         <!-- Label to the right of the input repeat -->
         <label for="Speed" class="input-label">Enter speed:</label>
         <!-- Number Input Field -->
-        <input type="number" id="Speed" name="Speed" class="number-input" min="1" max="1000" value="1000">
+        <input type="number" id="Speed" name="Speed" class="number-input-wide" min="1" max="1000" value="1000">
 
-        <label for="RnGIntensity" class="input-label">Enter R&G Intensity:</label>
+        <label for="RIntensity" class="input-label">Enter R Intensity:</label>
         <!-- Number Input Field -->
-        <input type="number" id="RnGIntensity" name="RnGIntensity" class="number-input" min="1" max="100" value="75">
+        <input type="number" id="RIntensity" name="RIntensity" class="number-input" min="1" max="100" value="75">
+
+        <label for="GIntensity" class="input-label">Enter G Intensity:</label>
+        <!-- Number Input Field -->
+        <input type="number" id="GIntensity" name="GIntensity" class="number-input" min="1" max="100" value="75">
 
         <label for="bYIntensity" class="input-label">Enter bright Y:</label>
         <!-- Number Input Field -->
@@ -482,7 +493,7 @@
         });
 
         // Select the input field by its ID
-        let inputField3 = document.getElementById('RnGIntensity');
+        let inputField3 = document.getElementById('RIntensity');
 
         // Listen for keypress events on the input field
         inputField3.addEventListener('keydown', function(event) {
@@ -494,20 +505,52 @@
                 // Get the text inside the input box
                 let enteredValue = inputField3.value;
                 if (enteredValue < 1) {
-                  inputField2.value = 1;
+                  inputField3.value = 1;
                   enteredValue = 1;
                 }
                 
                 // Show the alert box with the value
                 desatPercent = "10%";
                 redPercent = enteredValue + "%";
+                //greenPercent = enteredValue + "%";
+                //brightYellowPercent = "75%";
+                //darkYellowPercent = "50%";
+                currentIndex = 0;
+                refreshBars();
+                generateRepeatedBarsFrames(REPEAT_COUNT);
+                alert("R entered: " + redPercent + " repeat count: " + REPEAT_COUNT + " frame speed: " + delay);
+                timerId = setTimeout(runloop, delay);
+                runloop();
+            }
+        });
+
+                // Select the input field by its ID
+        let inputField6 = document.getElementById('GIntensity');
+
+        // Listen for keypress events on the input field
+        inputField6.addEventListener('keydown', function(event) {
+            // Check if the pressed key is 'Enter'
+            if (event.key === 'Enter') {
+                // Prevent default form submission behavior if applicable
+                event.preventDefault(); 
+                
+                // Get the text inside the input box
+                let enteredValue = inputField6.value;
+                if (enteredValue < 1) {
+                  inputField6.value = 1;
+                  enteredValue = 1;
+                }
+                
+                // Show the alert box with the value
+                desatPercent = "10%";
+                //redPercent = enteredValue + "%";
                 greenPercent = enteredValue + "%";
                 //brightYellowPercent = "75%";
                 //darkYellowPercent = "50%";
                 currentIndex = 0;
                 refreshBars();
                 generateRepeatedBarsFrames(REPEAT_COUNT);
-                alert("R and G entered: " + redPercent + " repeat count: " + REPEAT_COUNT + " frame speed: " + delay);
+                alert("G entered: " + greenPercent + " repeat count: " + REPEAT_COUNT + " frame speed: " + delay);
                 timerId = setTimeout(runloop, delay);
                 runloop();
             }
@@ -526,7 +569,7 @@
                 // Get the text inside the input box
                 let enteredValue = inputField4.value;
                 if (enteredValue < 1) {
-                  inputField2.value = 1;
+                  inputField4.value = 1;
                   enteredValue = 1;
                 }
                 
@@ -558,7 +601,7 @@
                 // Get the text inside the input box
                 let enteredValue = inputField5.value;
                 if (enteredValue < 1) {
-                  inputField2.value = 1;
+                  inputField5.value = 1;
                   enteredValue = 1;
                 }
                 
