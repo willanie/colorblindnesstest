@@ -25,6 +25,21 @@
         .center-btn:hover {
             background-color: #0056b3;
         }
+
+        /* Makes the Giphy embed responsive */
+        .gif-container {
+            width: 240px;
+            max-width: 240px;
+            height:0; 
+            padding-bottom:100%;
+            position: relative;
+            margin: 0 auto;
+            margin-top: 3vh;
+        }
+        .gif-container iframe {
+            pointer-events: none; /* Prevents users from clicking to pause */
+        }
+
     </style>
 </head>
 <body>
@@ -35,6 +50,18 @@
     <!-- Button wrapped in an anchor tag to go to another page -->
     <a href="colorbars.html" class="center-btn">RUN COLOR BAR SETUP</a>
     <a href="animatedcolorbars.html" class="center-btn">RUN COLOR BLINDNESS TEST</a>
+
+    <!-- Embedded Giphy Code with Autoplay -->
+    <div class="gif-container">
+        <iframe src="https://giphy.com/embed/KAvlM8rLYEXkLTMMM5" 
+                width="240" 
+                height="135" 
+                frameBorder="0" 
+                class="giphy-embed" 
+                allowFullScreen>
+        </iframe>
+    </div>
+
 
 </body>
 </html>
